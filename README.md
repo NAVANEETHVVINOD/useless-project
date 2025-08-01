@@ -1,95 +1,75 @@
-🐾 Kanya 🎯
+Kanya 🎯
 Basic Details
-Team Name: Nakamaz
+Team Name: Solo
 
 Team Members:
 
-Team Lead: Navaneeth V Vinod – Model Engineering College, Trikkakara
-
-(Solo Project – because who needs a team when you can build chaos alone?)
+Team Lead: Navaneeth V Vinod - Model Engineering College, Thrikkakara
 
 Project Description
-Kanya is the world's most unnecessary yet highly entertaining dating app for pets.
-Because apparently, belly rubs aren’t enough – now even dogs and cats need to swipe left and right to find "true love".
+Kanya is a dating application designed for pets, allowing pet owners to create profiles for their furry friends and find compatible matches. The platform enables swiping, profile exploration, and interaction between pet owners, providing a fun and engaging way to connect pets socially.
 
-(Warning: This app may cause jealousy among humans because your dog might get a date before you do.)
-
-The Problem (that doesn’t exist)
-Pets are lonely. They cry, they bark, they meow... but what they really need is a Tinder experience.
-For too long, pets have been denied the chance to reject other pets based on looks alone – just like humans do every day.
+The Problem (that doesn't exist)
+Finding love is already complicated, but finding a perfect match for your pets is even harder. There’s no dedicated platform where pets can “choose” their friends or future playmates based on their personalities.
 
 The Solution (that nobody asked for)
-Introducing Kanya, the first platform where pets can:
-
-Swipe left on smelly dogs 🐕
-
-Swipe right on cats that hate you just enough 😼
-
-Find "purr-fect" matches and maybe even go on a walk date in the park.
-
-Basically, it’s Bumble but with more barking and fewer bad pickup lines.
+Kanya introduces a swiping-based pet matchmaking system, allowing pet owners to browse profiles, like or pass potential matches, and schedule meetups for their pets—all within a smooth, modern web app experience.
 
 Technical Details
+Technologies/Components Used
 For Software:
+
 Languages: Python, JavaScript
 
 Frameworks: Flask (Backend), Nuxt 3 (Frontend)
 
-Libraries: Tailwind CSS, Pinia (State Management)
+Libraries: Tailwind CSS, Pinia for state management
 
-Tools: Git, VS Code, Google Images (for stealing cute pet pics 🐶😼)
+Tools: Git, VS Code, Node.js
 
 For Hardware:
-A laptop,
 
-A mouse for swiping (your dog can’t use a touchscreen yet),
-
-Optional: Dog treats for beta testing.
+Not applicable (Fully software-based project)
 
 Implementation
+For Software:
 Installation
 bash
 Copy code
-# Clone this repo
+# Clone the repository
 git clone https://github.com/NAVANEETHVVINOD/useless-project.git
 
-# Navigate to project folder
-cd useless-project
+# Navigate to frontend
+cd pet-tinder-frontend
 
-# Backend setup
-cd backend
-pip install -r requirements.txt
-
-# Frontend setup
-cd ../pet-tinder-frontend
+# Install dependencies
 npm install
 Run
 bash
 Copy code
-# Run backend
-flask run
-
-# Run frontend
+# Start frontend
 npm run dev
+
+# Navigate to backend folder and run Flask server
+cd ../backend
+python app.py
 Project Documentation
-Screenshots
-(To be added)
-Landing page of the ultimate pet-dating disaster.
-The swiping interface where pets play "who's cuter?"
-Because cats need more ways to ignore dogs online.
+Screenshots (Add at least 3)
+![Screenshot1](Add screenshot 1 here) Home page displaying pet profiles ready for swiping.
+
+![Screenshot2](Add screenshot 2 here) Profile details section showing prompts and information about a pet.
+
+![Screenshot3](Add screenshot 3 here) Match modal popup when two pets like each other.
 
 Diagrams
-(Placeholder)
-A highly sophisticated diagram that explains how pets swipe and humans cry.
+![Workflow](Add workflow diagram here) This diagram shows the flow between frontend (Nuxt) and backend (Flask API) for matchmaking requests.
 
 Project Demo
-Video: Coming soon… (once we convince the pets to sign a media release form 🐾)
+Video
+[Add your demo video link here] (The video demonstrates swiping, viewing profiles, and matching between pets.)
+
+Additional Demos
+[Optional additional links]
 
 Team Contributions
-Navaneeth V Vinod:
-
-Built the entire app solo
-
-Designed the chaos
-
-Spent more time making memes for this README than writing code
+Navaneeth V Vinod: Full-stack development (Frontend with Nuxt and Tailwind, Backend with Flask), UI design, and deployment setup
