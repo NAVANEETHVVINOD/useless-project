@@ -1,94 +1,95 @@
-Useless Project – Pet Tinder
-A totally “serious” app where your pets can finally find their paw-fect match! Because why should humans have all the dating apps? 🐶🐱💘
+🐾 Kanya 🎯
+Basic Details
+Team Name: Nakamaz
 
-📖 Table of Contents
-✨ About the Project
+Team Members:
 
-🎯 Features
+Team Lead: Navaneeth V Vinod – Model Engineering College, Trikkakara
 
-🛠️ Tech Stack
+(Solo Project – because who needs a team when you can build chaos alone?)
 
-🚀 Installation Guide
+Project Description
+Kanya is the world's most unnecessary yet highly entertaining dating app for pets.
+Because apparently, belly rubs aren’t enough – now even dogs and cats need to swipe left and right to find "true love".
 
-📂 Project Structure
+(Warning: This app may cause jealousy among humans because your dog might get a date before you do.)
 
-🐾 How It Works
+The Problem (that doesn’t exist)
+Pets are lonely. They cry, they bark, they meow... but what they really need is a Tinder experience.
+For too long, pets have been denied the chance to reject other pets based on looks alone – just like humans do every day.
 
-🙌 Contributing
+The Solution (that nobody asked for)
+Introducing Kanya, the first platform where pets can:
 
-📜 License
+Swipe left on smelly dogs 🐕
 
-✨ About the Project
-Pet Tinder is a fun web app designed to let pets swipe left or right to find their soulmate (or just a partner-in-crime for stealing snacks). Inspired by Bumble and Tinder, but for furry friends.
-This is a hackathon-style project built just for fun, not to replace real-world pet adoption services.
+Swipe right on cats that hate you just enough 😼
 
-🎯 Features
-✅ Swipe left or right to like or dislike potential pet matches
-✅ See cute pet profiles with names, age, breed, and sarcastic prompts
-✅ “See More Details” button for extra info (because love is complicated 🐕🐈)
-✅ Mobile-friendly & desktop-friendly UI
-✅ Smooth drag-and-swipe interactions like Bumble
-✅ (Optional) Funny match modal when two pets “like” each other
+Find "purr-fect" matches and maybe even go on a walk date in the park.
 
-🛠️ Tech Stack
-Frontend: Vue 3, Nuxt 3, TailwindCSS
+Basically, it’s Bumble but with more barking and fewer bad pickup lines.
 
-Backend: Python (FastAPI or Django – optional placeholder for now)
+Technical Details
+For Software:
+Languages: Python, JavaScript
 
-Tools: Git, Node.js, npm/yarn
+Frameworks: Flask (Backend), Nuxt 3 (Frontend)
 
-Version Control: GitHub
+Libraries: Tailwind CSS, Pinia (State Management)
 
-🚀 Installation Guide
-Follow these steps to run the project locally:
+Tools: Git, VS Code, Google Images (for stealing cute pet pics 🐶😼)
 
-1️⃣ Clone the repository
+For Hardware:
+A laptop,
+
+A mouse for swiping (your dog can’t use a touchscreen yet),
+
+Optional: Dog treats for beta testing.
+
+Implementation
+Installation
 bash
 Copy code
+# Clone this repo
 git clone https://github.com/NAVANEETHVVINOD/useless-project.git
+
+# Navigate to project folder
 cd useless-project
-2️⃣ Navigate to the frontend
-bash
-Copy code
-cd pet-tinder-frontend
-3️⃣ Install dependencies
-bash
-Copy code
+
+# Backend setup
+cd backend
+pip install -r requirements.txt
+
+# Frontend setup
+cd ../pet-tinder-frontend
 npm install
-4️⃣ Start the development server
+Run
 bash
 Copy code
+# Run backend
+flask run
+
+# Run frontend
 npm run dev
-Your app will be live at:
+Project Documentation
+Screenshots
+(To be added)
+Landing page of the ultimate pet-dating disaster.
+The swiping interface where pets play "who's cuter?"
+Because cats need more ways to ignore dogs online.
 
-arduino
-Copy code
-http://localhost:3000
-📂 Project Structure
-bash
-Copy code
-useless-project/
-│
-├── backend/                 # (Optional) Python server files
-│   └── ...
-│
-├── pet-tinder-frontend/     # Vue + Nuxt frontend
-│   ├── components/          # Reusable Vue components
-│   ├── pages/               # App pages (swipe.vue, create-profile.vue)
-│   ├── assets/              # Images, icons, styling
-│   ├── package.json
-│   └── ...
-│
-└── README.md
-🐾 How It Works
-1️⃣ Open the app → The first pet card appears.
-2️⃣ Swipe right (like) or left (nope) using touch or mouse drag.
-3️⃣ Click See More Details for extra info on the pet.
-4️⃣ If two pets “like” each other → you get a “Match” modal.
-5️⃣ Keep swiping until you run out of pets (because love is hard to find).
+Diagrams
+(Placeholder)
+A highly sophisticated diagram that explains how pets swipe and humans cry.
 
-🙌 Contributing
-Pull requests are welcome! If you have funny ideas for new features (like pet pick-up lines, or dog zodiac signs compatibility) feel free to fork and submit.
+Project Demo
+Video: Coming soon… (once we convince the pets to sign a media release form 🐾)
 
-📜 License
-This project is under the MIT License – feel free to remix, share, or make your own “pet dating app”.
+Team Contributions
+Navaneeth V Vinod:
+
+Built the entire app solo
+
+Designed the chaos
+
+Spent more time making memes for this README than writing code
