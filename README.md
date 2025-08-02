@@ -6,33 +6,27 @@ Team Members
 Team Lead: Navaneeth V Vinod - Model Engineering College, Thrikkakara
 
 Project Description
-Kanya is a fun and interactive dating app designed exclusively for pets. It allows pet owners to create adorable profiles for their furry friends, swipe through other pets, and find the perfect playdate or companion. Built as a light-hearted project, Kanya showcases creativity and tech skills in a unique way.
+Kanya is a fun, interactive dating web application designed exclusively for pets. It allows pet owners to create cute profiles for their furry friends, swipe through other pets, and find perfect matches for friendship or companionship.
 
 The Problem (that doesn't exist)
-Pets around the world are bored and lonely because they can't find a perfect furry friend to match their vibes. Why should humans have all the fun with dating apps?
+Pets have been struggling to find their "paw-fect" companion because there's no Tinder for them. They sit at home bored, dreaming of the day they can swipe right on their next best friend.
 
 The Solution (that nobody asked for)
-Kanya solves this “critical” problem by giving pets their own Tinder-like experience where they can:
-
-Create a profile with cute pictures.
-
-Swipe left or right on other pets.
-
-Find their “paw-fect” match!
+Kanya gives pets their own Tinder-inspired app. Pet owners can upload images, browse other pets, and swipe right to find playdates, walks, or simply a new furry buddy.
 
 Technical Details
 Technologies/Components Used
 For Software:
-Languages: JavaScript, Python
+Languages Used: JavaScript, Python
 
-Frameworks: Flask (Backend), Nuxt.js (Frontend)
+Frameworks Used: Nuxt.js (Frontend), Flask (Backend)
 
-Libraries: Tailwind CSS, Panica (UI support)
+Libraries Used: Tailwind CSS, Panica UI components
 
-Tools: Git, GitHub, VS Code
+Tools Used: Git, GitHub, Visual Studio Code
 
 For Hardware:
-No hardware components used in this project.
+No hardware components used for this project.
 
 Implementation
 Installation
@@ -41,16 +35,16 @@ Copy code
 # Clone the repository
 git clone https://github.com/NAVANEETHVVINOD/useless-project.git
 
-# Go to frontend
+# Navigate to frontend
 cd pet-tinder-frontend
 
 # Install dependencies
 npm install
 
-# Go to backend
+# Navigate to backend
 cd ../backend
 
-# Create a virtual environment
+# Create virtual environment
 python -m venv venv
 
 # Activate venv (Windows)
@@ -70,23 +64,31 @@ cd ../pet-tinder-frontend
 npm run dev
 Project Documentation
 Screenshots
-(Add your screenshots in /assets/screenshots/ and replace these paths)
+Landing Page: Homepage introducing Kanya for pets.
 
-Home Page: Landing page of Kanya where users start their journey.
+Swipe Interface: Shows the Tinder-like swiping feature for browsing pets.
 
-Swipe Feature: Tinder-like swipe interface for pets.
+Pet Profile View: Detailed view of a pet's profile with extra info.
 
-Match Modal: A fun pop-up showing when two pets "like" each other.
+Match Popup: Displays a match when two pets swipe right on each other.
+
+Final UI Screen: Overview of interactive buttons and main layout.
 
 Diagrams
-App Workflow: Simple illustration showing data flow between frontend and backend.
+(Workflow diagram to be added in future)
 
 Project Demo
-🎥 Video Demo: Click here to watch
-This video demonstrates how users can swipe through profiles, match pets, and enjoy a fun, interactive interface.
+🎥 Video Demo: ▶ Watch Demo https://drive.google.com/file/d/1DXAJVGaPO211-FoDb2rarPjkyMyxLPi9/view?usp=sharing
+This demo shows how users can navigate the website, swipe left or right, and experience a fun matching process for their pets.
 
 Additional Demos
-Link to Live Demo (Optional)
+(None at the moment)
 
 Team Contributions
-Navaneeth V Vinod: Full-stack development (Nuxt.js, Flask), UI/UX design, project setup, and deployment.
+Navaneeth V Vinod: Full-stack development (Frontend - Nuxt.js, Backend - Flask), UI/UX design, Tailwind styling, and deployment setup.
+
+pet-tinder-frontend\assets\screenshort\Screenshot 2025-08-02 070333.png
+pet-tinder-frontend\assets\screenshort\Screenshot 2025-08-02 070301.png
+pet-tinder-frontend\assets\screenshort\Screenshot 2025-08-02 070313.png
+pet-tinder-frontend\assets\screenshort\Screenshot 2025-08-02 070503.png
+pet-tinder-frontend\assets\screenshort\Screenshot 2025-08-02 070532.png
