@@ -2,8 +2,10 @@
   <div class="flex items-center justify-center py-12">
     <div class="w-full max-w-md p-8 space-y-8 bg-white/40 backdrop-blur-md rounded-2xl shadow-lg">
       <div class="text-center">
-        <h1 class="font-heading text-5xl text-brand-brown">Welcome Back!</h1>
-        <p class="mt-2 text-text-light">Let's get your pet back in the game.</p>
+        <!-- CHANGE: Updated text color -->
+        <h1 class="font-heading text-5xl text-brand-primary">Welcome Back!</h1>
+        <!-- CHANGE: Updated text color for consistency -->
+        <p class="mt-2 text-text-secondary">Let's get your pet back in the game.</p>
       </div>
       
       <form @submit.prevent="handleLogin" class="space-y-6">
@@ -28,9 +30,10 @@
       </form>
 
       <div class="text-center">
-        <p class="text-sm text-text-light">
+        <p class="text-sm text-text-secondary">
           Don't have an account?
-          <NuxtLink to="/signup" class="font-bold text-brand-brown hover:underline">Sign Up</NuxtLink>
+          <!-- CHANGE: Updated link color -->
+          <NuxtLink to="/signup" class="font-bold text-brand-primary hover:underline">Sign Up</NuxtLink>
         </p>
       </div>
     </div>
@@ -51,11 +54,8 @@ const formData = ref({
 });
 
 const handleLogin = async () => {
-  // MOVED: We do the same here for the login page.
   const userStore = useUserStore();
-
   const success = await userStore.login(formData.value);
-
   if (success) {
     router.push('/swipe'); 
   } else {

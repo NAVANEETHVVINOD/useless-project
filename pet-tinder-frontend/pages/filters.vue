@@ -7,7 +7,7 @@
         <p class="mt-2 text-text-light">Who are you looking for? Let's find the perfect friends for your pet.</p>
       </div>
       <hr class="border-brand-brown/10 my-6">
-      
+
       <div class="space-y-8">
         <!-- 1. Friendship Type Selection -->
         <div>
@@ -16,7 +16,12 @@
             <button
               v-for="friendship in friendshipTypes" :key="friendship.id"
               @click="filters.friendshipType = friendship.id"
-              :class="['p-4 rounded-xl text-left transition-all', filters.friendshipType === friendship.id ? 'bg-brand-yellow text-brand-brown shadow-lg ring-2 ring-brand-brown' : 'bg-white/50 hover:bg-white/80']"
+              :class="[
+                'p-4 rounded-xl text-left transition-all',
+                filters.friendshipType === friendship.id 
+                  ? 'bg-brand-yellow text-brand-brown shadow-lg ring-2 ring-brand-brown' 
+                  : 'bg-white/50 hover:bg-white/80'
+              ]"
             >
               <span class="text-2xl">{{ friendship.emoji }}</span>
               <p class="font-bold mt-1">{{ friendship.name }}</p>
@@ -24,35 +29,51 @@
           </div>
         </div>
 
-        <!-- 2. Species Preference (Multi-select) -->
+        <!-- 2. Species Preference -->
         <div>
           <label class="block text-lg font-bold text-brand-brown/80 mb-2">What species are you open to?</label>
           <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
             <button
               v-for="species in allSpecies" :key="species"
               @click="toggleSpecies(species)"
-              :class="['py-2 px-4 rounded-xl font-semibold transition-all', filters.species.includes(species) ? 'bg-brand-brown text-white' : 'bg-white/50 hover:bg-white/80']"
+              :class="[
+                'py-2 px-4 rounded-xl font-semibold transition-all',
+                filters.species.includes(species)
+                  ? 'bg-brand-brown text-white'
+                  : 'bg-white/50 hover:bg-white/80 text-brand-brown'
+              ]"
             >
               {{ species }}
             </button>
           </div>
         </div>
 
-        <!-- 3. Breed Preference (Conditional & Dynamic) -->
-        <div v-if="filters.species.length > 0" class="space-y-4">
+        <!-- 3. Breed Preferences as Buttons -->
+        <div v-if="filters.species.length > 0" class="space-y-6">
           <label class="block text-lg font-bold text-brand-brown/80">Any breed preferences?</label>
-          <p class="text-sm text-text-light -mt-3">Looking for a fellow Beagle to share your love for howling? Or will anyone with four paws do?</p>
-          <!-- Loop through each SELECTED species to show its breed dropdown -->
+          <p class="text-sm text-text-light -mt-3">Choose preferred breeds. Or skip if your pet isn't picky.</p>
+
           <div v-for="speciesName in filters.species" :key="speciesName">
-            <label :for="`breed-${speciesName}`" class="block font-bold text-brand-brown/90 mb-1">{{ speciesName }} Breeds</label>
-            <select :id="`breed-${speciesName}`" v-model="filters.breeds[speciesName]" multiple class="w-full px-4 py-3 bg-white/50 border-2 border-brand-pink-dark rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-yellow h-24">
-              <option v-for="breed in breedData[speciesName]" :key="breed" :value="breed">{{ breed }}</option>
-            </select>
-            <p class="text-xs text-text-light mt-1">Hold Ctrl/Cmd to select multiple breeds.</p>
+            <label class="block font-bold text-brand-brown/90 mb-2">{{ speciesName }} Breeds</label>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="breed in breedData[speciesName] || []"
+                :key="breed"
+                @click="toggleBreed(speciesName, breed)"
+                :class="[
+                  'px-4 py-2 rounded-full transition-all text-sm font-medium',
+                  isBreedSelected(speciesName, breed)
+                    ? 'bg-brand-yellow text-brand-brown ring-2 ring-brand-brown'
+                    : 'bg-white/50 hover:bg-white/80 text-brand-brown'
+                ]"
+              >
+                {{ breed }}
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- 4. Location Filter -->
+        <!-- 4. Location -->
         <FormInput 
           id="city" 
           label="In which city?" 
@@ -62,19 +83,22 @@
 
         <!-- 5. Distance Radius -->
         <div>
-          <label for="distance" class="block text-lg font-bold text-brand-brown/80 mb-2">Distance Radius: <span class="text-brand-brown font-heading text-2xl">{{ filters.distance }} km</span></label>
+          <label for="distance" class="block text-lg font-bold text-brand-brown/80 mb-2">
+            Distance Radius: 
+            <span class="text-brand-brown font-heading text-2xl">{{ filters.distance }} km</span>
+          </label>
           <input 
             id="distance"
             type="range"
             min="1"
             max="50"
             v-model="filters.distance"
-            class="w-full h-2 bg-brand-pink-dark rounded-lg appearance-none cursor-pointer range-thumb:bg-brand-yellow"
+            class="w-full h-2 bg-brand-pink-dark rounded-lg appearance-none cursor-pointer"
           >
         </div>
       </div>
 
-      <!-- Navigation Button -->
+      <!-- Final Button -->
       <div class="flex justify-end mt-8">
         <FormButton @click="startSwiping" type="button" class="!w-auto !px-8">
           Start Swiping →
@@ -86,16 +110,17 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import FormInput from '~/components/form/FormInput.vue';
 import FormButton from '~/components/form/FormButton.vue';
 
 const router = useRouter();
 
-// --- Filter Data & State ---
+// --- State ---
 const filters = ref({
   friendshipType: 'playdate',
   species: [],
-  breeds: {}, // e.g., { Dog: ['Beagle'], Cat: ['Any Cat Breed'] }
+  breeds: {}, // e.g., { Dog: ['Beagle'], Cat: ['Any'] }
   city: '',
   distance: 25,
 });
@@ -108,35 +133,45 @@ const friendshipTypes = [
 
 const allSpecies = ['Dog', 'Cat', 'Bird', 'Fish', 'Hamster', 'Horse', 'Other'];
 
-// This data powers the dynamic breed dropdowns
 const breedData = {
-  Dog: ['Any Dog Breed', 'Beagle', 'Golden Retriever', 'Poodle', 'Husky', 'German Shepherd'],
-  Cat: ['Any Cat Breed', 'Siamese', 'Persian', 'Maine Coon', 'Sphynx'],
-  Bird: ['Any Bird', 'Parakeet', 'Cockatiel', 'Macaw'],
-  Horse: ['Any Horse Breed', 'Thoroughbred', 'Quarter Horse', 'Arabian'],
-  // Add other species here if they have distinct breeds
+  Dog: ['Beagle', 'Golden Retriever', 'Poodle', 'Husky', 'German Shepherd'],
+  Cat: ['Siamese', 'Persian', 'Maine Coon', 'Sphynx'],
+  Bird: ['Parakeet', 'Cockatiel', 'Macaw'],
+  Fish: ['Goldfish', 'Betta', 'Guppy'],
+  Hamster: ['Syrian', 'Dwarf', 'Roborovski'],
+  Horse: ['Thoroughbred', 'Quarter Horse', 'Arabian'],
+  Other: ['Any']
 };
 
-// --- Component Logic ---
-const toggleSpecies = (speciesName) => {
-  const index = filters.value.species.indexOf(speciesName);
+// --- Logic ---
+const toggleSpecies = (species) => {
+  const index = filters.value.species.indexOf(species);
   if (index > -1) {
-    // If it exists, remove it
     filters.value.species.splice(index, 1);
-    // Also remove any breed selections for this species
-    delete filters.value.breeds[speciesName];
+    delete filters.value.breeds[species];
   } else {
-    // If it doesn't exist, add it (and check if it has breed data)
-    filters.value.species.push(speciesName);
-    if (breedData[speciesName]) {
-      // Initialize its breed selection with 'Any Breed'
-      filters.value.breeds[speciesName] = [breedData[speciesName][0]];
-    }
+    filters.value.species.push(species);
+    filters.value.breeds[species] = [];
   }
 };
 
+const toggleBreed = (species, breed) => {
+  const selectedBreeds = filters.value.breeds[species] || [];
+  const index = selectedBreeds.indexOf(breed);
+  if (index > -1) {
+    selectedBreeds.splice(index, 1);
+  } else {
+    selectedBreeds.push(breed);
+  }
+  filters.value.breeds[species] = selectedBreeds;
+};
+
+const isBreedSelected = (species, breed) => {
+  return filters.value.breeds[species]?.includes(breed);
+};
+
 const startSwiping = () => {
-  console.log("Applying filters:", JSON.parse(JSON.stringify(filters.value)));
+  console.log("Applying filters:", filters.value);
   router.push('/swipe');
 };
 </script>

@@ -1,3 +1,5 @@
+// pet-tinder-frontend/components/PetCard.vue
+
 <template>
   <div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden">
     <!-- Image Section -->
@@ -13,13 +15,13 @@
     <!-- "See More Details" Button -->
     <div
       @click.stop="toggleExpansion"
-      class="w-full bg-white py-3 text-center font-bold text-brand-brown/70 cursor-pointer hover:bg-gray-50 border-y border-gray-200"
+      class="w-full bg-white py-3 text-center font-bold text-brand-primary/70 cursor-pointer hover:bg-gray-50 border-y border-gray-200"
     >
       <span class="transition-transform duration-300 inline-block" :class="{'rotate-180': isExpanded}">▼</span>
       {{ isExpanded ? 'See Less' : 'See More Details' }}
     </div>
     
-    <!-- Details Section (Revealed on expand with a smooth transition) -->
+    <!-- Details Section -->
     <div 
       class="transition-all duration-500 ease-in-out"
       :class="isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'"
@@ -34,8 +36,8 @@
           <h3 class="font-heading text-2xl mb-3">About Me</h3>
           <div class="space-y-4">
             <div v-for="prompt in pet.prompts" :key="prompt.question">
-              <p class="font-bold text-text-dark">{{ prompt.question }}</p>
-              <p class="text-text-light pl-4">{{ prompt.answer }}</p>
+              <p class="font-bold text-text-primary">{{ prompt.question }}</p>
+              <p class="text-text-secondary pl-4">{{ prompt.answer }}</p>
             </div>
           </div>
         </div>
@@ -46,7 +48,7 @@
 
 <style scoped>
 .detail-chip {
-  @apply bg-brand-brown/10 text-brand-brown font-semibold px-3 py-1 rounded-full text-sm;
+  @apply bg-brand-primary/10 text-brand-primary font-semibold px-3 py-1 rounded-full text-sm;
 }
 </style>
 
@@ -58,20 +60,16 @@ defineProps({
 });
 
 const emit = defineEmits(['expanded']);
-
 const isExpanded = ref(false);
-
 const toggleExpansion = () => {
   isExpanded.value = !isExpanded.value;
   emit('expanded', isExpanded.value);
 };
-
 const collapse = () => {
   if (isExpanded.value) {
     isExpanded.value = false;
     emit('expanded', false);
   }
 };
-
 defineExpose({ collapse });
 </script>

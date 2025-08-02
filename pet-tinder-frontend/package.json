@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@phosphor-icons/vue": "^2.2.1",
     "@pinia/nuxt": "^0.11.2",
     "axios": "^1.11.0",
     "nuxt": "^4.0.1",
