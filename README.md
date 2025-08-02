@@ -1,75 +1,92 @@
 Kanya 🎯
 Basic Details
-Team Name: Solo
-
-Team Members:
+Team Name: Kanya
+Team Members
 
 Team Lead: Navaneeth V Vinod - Model Engineering College, Thrikkakara
 
 Project Description
-Kanya is a dating application designed for pets, allowing pet owners to create profiles for their furry friends and find compatible matches. The platform enables swiping, profile exploration, and interaction between pet owners, providing a fun and engaging way to connect pets socially.
+Kanya is a fun and interactive dating app designed exclusively for pets. It allows pet owners to create adorable profiles for their furry friends, swipe through other pets, and find the perfect playdate or companion. Built as a light-hearted project, Kanya showcases creativity and tech skills in a unique way.
 
 The Problem (that doesn't exist)
-Finding love is already complicated, but finding a perfect match for your pets is even harder. There’s no dedicated platform where pets can “choose” their friends or future playmates based on their personalities.
+Pets around the world are bored and lonely because they can't find a perfect furry friend to match their vibes. Why should humans have all the fun with dating apps?
 
 The Solution (that nobody asked for)
-Kanya introduces a swiping-based pet matchmaking system, allowing pet owners to browse profiles, like or pass potential matches, and schedule meetups for their pets—all within a smooth, modern web app experience.
+Kanya solves this “critical” problem by giving pets their own Tinder-like experience where they can:
+
+Create a profile with cute pictures.
+
+Swipe left or right on other pets.
+
+Find their “paw-fect” match!
 
 Technical Details
 Technologies/Components Used
 For Software:
+Languages: JavaScript, Python
 
-Languages: Python, JavaScript
+Frameworks: Flask (Backend), Nuxt.js (Frontend)
 
-Frameworks: Flask (Backend), Nuxt 3 (Frontend)
+Libraries: Tailwind CSS, Panica (UI support)
 
-Libraries: Tailwind CSS, Pinia for state management
-
-Tools: Git, VS Code, Node.js
+Tools: Git, GitHub, VS Code
 
 For Hardware:
-
-Not applicable (Fully software-based project)
+No hardware components used in this project.
 
 Implementation
-For Software:
 Installation
 bash
 Copy code
 # Clone the repository
 git clone https://github.com/NAVANEETHVVINOD/useless-project.git
 
-# Navigate to frontend
+# Go to frontend
 cd pet-tinder-frontend
 
 # Install dependencies
 npm install
+
+# Go to backend
+cd ../backend
+
+# Create a virtual environment
+python -m venv venv
+
+# Activate venv (Windows)
+venv\Scripts\activate
+
+# Install Flask
+pip install flask
 Run
 bash
 Copy code
-# Start frontend
+# Run backend (Flask)
+cd backend
+flask run
+
+# Run frontend (Nuxt.js)
+cd ../pet-tinder-frontend
 npm run dev
-
-# Navigate to backend folder and run Flask server
-cd ../backend
-python app.py
 Project Documentation
-Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here) Home page displaying pet profiles ready for swiping.
+Screenshots
+(Add your screenshots in /assets/screenshots/ and replace these paths)
 
-![Screenshot2](Add screenshot 2 here) Profile details section showing prompts and information about a pet.
+Home Page: Landing page of Kanya where users start their journey.
 
-![Screenshot3](Add screenshot 3 here) Match modal popup when two pets like each other.
+Swipe Feature: Tinder-like swipe interface for pets.
+
+Match Modal: A fun pop-up showing when two pets "like" each other.
 
 Diagrams
-![Workflow](Add workflow diagram here) This diagram shows the flow between frontend (Nuxt) and backend (Flask API) for matchmaking requests.
+App Workflow: Simple illustration showing data flow between frontend and backend.
 
 Project Demo
-Video
-[Add your demo video link here] (The video demonstrates swiping, viewing profiles, and matching between pets.)
+🎥 Video Demo: Click here to watch
+This video demonstrates how users can swipe through profiles, match pets, and enjoy a fun, interactive interface.
 
 Additional Demos
-[Optional additional links]
+Link to Live Demo (Optional)
 
 Team Contributions
-Navaneeth V Vinod: Full-stack development (Frontend with Nuxt and Tailwind, Backend with Flask), UI design, and deployment setup
+Navaneeth V Vinod: Full-stack development (Nuxt.js, Flask), UI/UX design, project setup, and deployment.
