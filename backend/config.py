@@ -1,16 +1,20 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from a .env file
 load_dotenv()
 
 class Config:
-    # Secret key for signing cookies and tokens. CHANGE THIS!
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'a-super-secret-key-you-should-change'
+    # Basic Flask config
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
     
     # Database configuration
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT Configuration
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'another-super-secret-key'
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+    
+    # Upload folder configuration
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+    MAX_CONTENT_LENGTH = 1 * 1024 * 1024  # 1MB max file size
