@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  phone         String?   @unique
+  passwordHash  String?
+  emailVerified Boolean   @default(false)
+  phoneVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Profile
+  firstName     String?
+  lastName      String?
+  location      Json?     // { lat, lng, city, state, country }
+  
+  // Settings
+  preferences   Json?     // User preferences JSON
+  isPremium     Boolean   @default(false)
+  premiumTier   String?   // "plus" | "platinum"
+  premiumExpiry DateTime?
+  
+  // Relations
+  pets          Pet[]
+  swipes        Swipe[]
+  matches       Match[]   @relation("UserMatches")
+  messages      Message[]
+  reports       Report[]  @relation("Reporter")
+  blockedUsers  Block[]   @relation("Blocker")
+  
+  // Metadata
+  lastActiveAt  DateTime  @default(now())
+  isDeleted     Boolean   @default(false)
+  
+  @@index([email])
+  @@index([phone])
+}
+
+model Pet {
+  id            String    @id @default(cuid())
+  ownerId       String
+  owner         User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  // Basic Info
+  name          String
+  species       String    // "dog" | "cat" | "bird" | "rabbit" | "other"
+  breed         String
+  birthday      DateTime
+  gender        String    // "male" | "female" | "neutered" | "spayed"
+  size          String    // "small" | "medium" | "large" | "giant"
+  
+  // Profile
+  bio           String?
+  photos        Json      // Array of photo URLs
+  personality   Json?     // Array of personality traits
+  
+  // Computed
+  age           Int?      // Calculated from birthday
+  zodiacSign    String?   // For horoscope feature
+  
+  // Status
+  isActive      Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  
+  // Stats
+  swipeCount    Int       @default(0)
+  matchCount    Int       @default(0)
+  popularityScore Float   @default(0)
+  
+  // Relations
+  swipes        Swipe[]
+  matches       Match[]   @relation("PetMatches")
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([ownerId])
+  @@index([species])
+  @@index([isActive])
+}
+
+model Swipe {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  petId       String
+  pet         Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
+  
+  // Swipe data
+  direction   String    // "left" | "right" | "super"
+  targetPetId String    // The pet being swiped on
+  
+  // Location at time of swipe (for distance filtering)
+  location    Json?
+  
+  createdAt   DateTime  @default(now())
+  
+  @@unique([petId, targetPetId]) // Prevent duplicate swipes
+  @@index([userId])
+  @@index([petId])
+  @@index([targetPetId])
+}
+
+model Match {
+  id          String    @id @default(cuid())
+  pet1Id      String
+  pet1        Pet       @relation("PetMatches", fields: [pet1Id], references: [id], onDelete: Cascade)
+  pet2Id      String
+  user1Id     String
+  user1       User      @relation("UserMatches", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2Id     String
+  
+  // Match metadata
+  matchedAt   DateTime  @default(now())
+  expiresAt   DateTime? // For non-premium users
+  isSuperLike Boolean   @default(false)
+  
+  // Status
+  isActive    Boolean   @default(true)
+  unmatched   Boolean   @default(false)
+  unmatchedBy String?
+  
+  // Relations
+  messages    Message[]
+  
+  @@unique([pet1Id, pet2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@index([isActive])
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  matchId     String
+  match       Match     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  senderId    String
+  sender      User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  
+  // Content
+  content     String
+  type        String    @default("text") // "text" | "image" | "video"
+  mediaUrl    String?
+  
+  // Status
+  isRead      Boolean   @default(false)
+  readAt      DateTime?
+  isDeleted   Boolean   @default(false)
+  
+  createdAt   DateTime  @default(now())
+  
+  @@index([matchId])
+  @@index([senderId])
+  @@index([createdAt])
+}
+
+model Report {
+  id          String    @id @default(cuid())
+  reporterId  String
+  reporter    User      @relation("Reporter", fields: [reporterId], references: [id])
+  
+  // What's being reported
+  reportType  String    // "user" | "pet" | "message" | "photo"
+  targetId    String    // ID of reported entity
+  
+  // Report details
+  reason      String    // Category
+  description String?
+  
+  // Status
+  status      String    @default("pending") // "pending" | "reviewed" | "resolved" | "dismissed"
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  
+  createdAt   DateTime  @default(now())
+  
+  @@index([reporterId])
+  @@index([targetId])
+  @@index([status])
+}
+
+model Block {
+  id          String    @id @default(cuid())
+  blockerId   String
+  blocker     User      @relation("Blocker", fields: [blockerId], references: [id])
+  blockedId   String
+  
+  reason      String?
+  createdAt   DateTime  @default(now())
+  
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+}
