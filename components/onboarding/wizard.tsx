@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PetProfileSchema, PetProfileFormData, SPECIES, SIZES, GENDERS } from "@/lib/validations/pet"
+import { PetProfileSchema, PetProfileFormData, SPECIES, SIZES, GENDERS, BREEDS } from "@/lib/validations/pet"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -24,6 +24,9 @@ export function PetOnboardingWizard() {
     mode: "onChange",
     defaultValues: formData
   })
+
+  // Watch species to dynamically change breed options
+  const selectedSpecies = form.watch("species");
 
   useEffect(() => {
     restoreDraft();
@@ -116,13 +119,23 @@ export function PetOnboardingWizard() {
                         </FormItem>
                     )} />
 
-                    <FormField control={form.control} name="breed" render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Breed</FormLabel>
-                            <FormControl><Input placeholder="Golden Retriever" {...field} /></FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )} />
+                    <FormField control={form.control} name="breed" render={({ field }) => {
+                        const breedOptions = selectedSpecies && BREEDS[selectedSpecies] ? BREEDS[selectedSpecies] : [];
+                        return (
+                            <FormItem>
+                                <FormLabel>Breed</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedSpecies}>
+                                    <FormControl>
+                                        <SelectTrigger><SelectValue placeholder={selectedSpecies ? "Select breed" : "Select species first"} /></SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {breedOptions.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        );
+                    }} />
 
                     <FormField control={form.control} name="gender" render={({ field }) => (
                         <FormItem>

@@ -9,6 +9,14 @@ export const SPECIES = ['dog', 'cat', 'bird', 'rabbit', 'other'] as const;
 export const GENDERS = ['male', 'female', 'neutered', 'spayed'] as const;
 export const SIZES = ['small', 'medium', 'large', 'giant'] as const;
 
+export const BREEDS: Record<typeof SPECIES[number], string[]> = {
+  dog: ['Golden Retriever', 'Labrador', 'French Bulldog', 'Poodle', 'German Shepherd', 'Husky', 'Mixed/Other'],
+  cat: ['Persian', 'Maine Coon', 'Siamese', 'Ragdoll', 'British Shorthair', 'Sphynx', 'Mixed/Other'],
+  bird: ['Parrot', 'Cockatiel', 'Canary', 'Finch', 'Macaw', 'Lovebird', 'Other'],
+  rabbit: ['Holland Lop', 'Mini Rex', 'Lionhead', 'Flemish Giant', 'Dutch', 'Other'],
+  other: ['Other']
+};
+
 // Personality traits
 export const PERSONALITY_TRAITS = [
   'Playful', 'Energetic', 'Calm', 'Friendly', 'Shy',
