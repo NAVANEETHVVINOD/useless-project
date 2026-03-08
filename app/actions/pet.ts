@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { petProfileSchema } from "@/lib/validations/pet";
+import { PetProfileSchema } from "@/lib/validations/pet";
 import { redirect } from "next/navigation";
 
 export async function createPetProfile(formData: any) {
@@ -20,7 +20,7 @@ export async function createPetProfile(formData: any) {
       formData.birthday = new Date(formData.birthday);
     }
     
-    const parsed = petProfileSchema.parse(formData);
+    const parsed = PetProfileSchema.parse(formData);
 
     await prisma.pet.create({
       data: {

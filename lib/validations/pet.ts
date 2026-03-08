@@ -17,7 +17,7 @@ export const PERSONALITY_TRAITS = [
 ] as const;
 
 // Step 1: Basic Info
-export const basicInfoSchema = z.object({
+export const BasicInfoSchema = z.object({
   name: z.string()
     .min(1, 'Pet name is required')
     .max(50, 'Pet name must be under 50 characters'),
@@ -44,18 +44,12 @@ export const basicInfoSchema = z.object({
 });
 
 // Step 2: Photos
-export const photoSchema = z.object({
-  id: z.string(),
-  file: z.instanceof(File).optional(),
-  preview: z.string(),
-  uploadUrl: z.string().optional(),
-  order: z.number()
-});
+export const photoSchema = z.string().url('Must be a valid image URL');
 
-export const photosSchema = z.object({
+export const PhotosSchema = z.object({
   photos: z.array(photoSchema)
-    .min(4, 'At least 4 photos are required')
-    .max(9, 'Maximum 9 photos allowed')
+    .min(1, 'At least 1 photo is required')
+    .max(6, 'Maximum 6 photos allowed')
 });
 
 // Step 3: Personality & Bio
@@ -69,7 +63,7 @@ const containsProhibitedContent = (text: string): boolean => {
          emailPattern.test(text);
 };
 
-export const personalityBioSchema = z.object({
+export const PersonalityBioSchema = z.object({
   personality: z.array(z.string())
     .min(3, 'Select at least 3 personality traits')
     .max(8, 'Select up to 8 personality traits'),
@@ -82,7 +76,7 @@ export const personalityBioSchema = z.object({
 });
 
 // Step 4: Discovery Preferences
-export const preferencesSchema = z.object({
+export const PreferencesSchema = z.object({
   maxDistance: z.number()
     .min(1, 'Distance must be at least 1 mile')
     .max(100, 'Distance cannot exceed 100 miles'),
@@ -97,23 +91,23 @@ export const preferencesSchema = z.object({
 });
 
 // Complete profile schema
-export const petProfileSchema = z.object({
+export const PetProfileSchema = z.object({
   name: z.string().min(1).max(50),
   species: z.enum(SPECIES),
   breed: z.string().min(1),
   birthday: z.date(),
   gender: z.enum(GENDERS),
   size: z.enum(SIZES),
-  photos: z.array(photoSchema).min(4).max(9),
+  photos: z.array(photoSchema).min(1).max(6),
   personality: z.array(z.string()).min(3).max(8),
   bio: z.string().min(50).max(500),
-  preferences: preferencesSchema
+  preferences: PreferencesSchema
 });
 
 // Type exports
-export type BasicInfoFormData = z.infer<typeof basicInfoSchema>;
+export type BasicInfoFormData = z.infer<typeof BasicInfoSchema>;
 export type PhotoData = z.infer<typeof photoSchema>;
-export type PhotosFormData = z.infer<typeof photosSchema>;
-export type PersonalityBioFormData = z.infer<typeof personalityBioSchema>;
-export type PreferencesFormData = z.infer<typeof preferencesSchema>;
-export type PetProfileFormData = z.infer<typeof petProfileSchema>;
+export type PhotosFormData = z.infer<typeof PhotosSchema>;
+export type PersonalityBioFormData = z.infer<typeof PersonalityBioSchema>;
+export type PreferencesFormData = z.infer<typeof PreferencesSchema>;
+export type PetProfileFormData = z.infer<typeof PetProfileSchema>;

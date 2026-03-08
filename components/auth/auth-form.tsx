@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { login, signup } from "@/app/actions/auth"
+import { AuthSchema } from "@/lib/validations/auth";
 import {
     Form,
     FormControl,
@@ -21,30 +22,23 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-const userAuthSchema = z.object({
-    firstName: z.string().min(2).optional().or(z.literal('')),
-    email: z.string().email(),
-    password: z.string().min(8, {
-        message: "Password must be at least 8 characters long",
-    }),
-})
-
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement> & {
     type: "login" | "signup"
 }
 
-type FormData = z.infer<typeof userAuthSchema>
+type FormData = z.infer<typeof AuthSchema>
 
 export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [errorMsg, setErrorMsg] = React.useState<string | null>(null)
 
     const form = useForm<FormData>({
-        resolver: zodResolver(userAuthSchema),
+        resolver: zodResolver(AuthSchema),
         defaultValues: {
             firstName: "",
             email: "",
             password: "",
+            confirmPassword: "",
         },
     })
 
@@ -155,6 +149,33 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                 </FormItem>
                             )}
                         />
+                        {type === "signup" && (
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="sr-only">Confirm Password</FormLabel>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                                <Input
+                                                    placeholder="Confirm Password"
+                                                    type="password"
+                                                    autoCapitalize="none"
+                                                    autoComplete="new-password"
+                                                    autoCorrect="off"
+                                                    disabled={isLoading}
+                                                    className="pl-10"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
                         <Button disabled={isLoading} className="font-bold">
                             {isLoading && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

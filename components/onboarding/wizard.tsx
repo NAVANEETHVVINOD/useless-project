@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { petProfileSchema, PetProfileFormData, SPECIES, SIZES, GENDERS } from "@/lib/validations/pet"
+import { PetProfileSchema, PetProfileFormData, SPECIES, SIZES, GENDERS } from "@/lib/validations/pet"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { createPetProfile } from "@/app/actions/pet"
-// import { supabase } from "@/lib/supabase/client" // We'll need this for photo uploads later
+import { ImageUploader } from "@/components/onboarding/image-uploader"
 
 export function PetOnboardingWizard() {
   const [step, setStep] = useState(1)
@@ -21,7 +21,7 @@ export function PetOnboardingWizard() {
 
   const form = useForm<PetProfileFormData>({
     // We optionally bypass deep zod validation on incomplete steps by validating just the current fields before next()
-    resolver: zodResolver(petProfileSchema),
+    resolver: zodResolver(PetProfileSchema),
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -170,11 +170,21 @@ export function PetOnboardingWizard() {
             {/* STEP 2: Photos */}
             <div className={step === 2 ? "block" : "hidden"}>
                 <h2 className="text-xl font-semibold mb-4">Upload Photos</h2>
-                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-                    <p className="text-muted-foreground mb-4">Drag and drop photos here</p>
-                    <Button variant="outline" type="button">Select Files</Button>
-                    <p className="text-xs text-muted-foreground mt-4">We will implement actual Supabase bucket uploads here in the next task.</p>
-                </div>
+                <FormField control={form.control} name="photos" render={({ field }) => (
+                    <FormItem>
+                        <FormControl>
+                            <ImageUploader 
+                                value={field.value as string[]} 
+                                onChange={field.onChange} 
+                                maxPhotos={6} 
+                            />
+                        </FormControl>
+                        <FormDescription>
+                            Your pet's main profile picture will be the first photo you upload.
+                        </FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )} />
             </div>
 
             {/* STEP 3: Bio */}

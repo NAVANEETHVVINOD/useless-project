@@ -3,13 +3,23 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { AuthSchema, LoginSchema } from "@/lib/validations/auth";
+import { z } from "zod";
 
-export async function login(data: any) {
+export async function login(data: z.infer<typeof LoginSchema>) {
+  const validatedFields = LoginSchema.safeParse(data);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields" };
+  }
+
+  const { email, password } = validatedFields.data;
+
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
-    email: data.email,
-    password: data.password,
+    email,
+    password,
   });
 
   if (error) {
@@ -19,16 +29,25 @@ export async function login(data: any) {
   redirect("/discover");
 }
 
-export async function signup(data: any) {
+export async function signup(data: z.infer<typeof AuthSchema>) {
+  const validatedFields = AuthSchema.safeParse(data);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields" };
+  }
+
+  const { email, password, firstName } = validatedFields.data;
+
   const supabase = await createClient();
 
   const { data: authData, error } = await supabase.auth.signUp({
-    email: data.email,
-    password: data.password,
+    email,
+    password,
     options: {
       data: {
-        first_name: data.firstName,
-      }
+        first_name: firstName,
+      },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`,
     }
   });
 
@@ -43,7 +62,7 @@ export async function signup(data: any) {
         data: {
           id: authData.user.id,
           email: authData.user.email!,
-          firstName: data.firstName || null,
+          firstName: firstName || null,
         }
       });
     } catch (e) {
@@ -52,5 +71,5 @@ export async function signup(data: any) {
     }
   }
 
-  redirect("/discover");
+  redirect("/auth/verify");
 }
