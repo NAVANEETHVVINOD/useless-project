@@ -67,9 +67,9 @@ export function PetOnboardingWizard() {
     try {
       setFormData(data);
       await submitProfile();
+      window.location.href = "/discover";
     } catch (e) {
       setErrorMsg("Failed to create profile. Please try again.")
-    } finally {
       setIsSubmitting(false)
     }
   }

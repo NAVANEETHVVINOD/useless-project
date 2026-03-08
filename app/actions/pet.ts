@@ -50,7 +50,5 @@ export async function createPetProfile(formData: any) {
     console.error("Failed to create pet profile:", error);
     return { error: error?.message || "Something went wrong saving your profile." };
   }
-
-  // Redirect to the discover page once successfully created
-  redirect("/discover");
+  return { success: true };
 }
