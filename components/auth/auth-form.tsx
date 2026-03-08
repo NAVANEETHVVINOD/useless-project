@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { login, signup } from "@/app/actions/auth"
 import { AuthSchema } from "@/lib/validations/auth";
+import { createClient } from "@/lib/supabase/client"
 import {
     Form,
     FormControl,
@@ -30,6 +31,7 @@ type FormData = z.infer<typeof AuthSchema>
 
 export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false)
     const [errorMsg, setErrorMsg] = React.useState<string | null>(null)
 
     const form = useForm<FormData>({
@@ -79,9 +81,9 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="sr-only">First Name</FormLabel>
-                                        <FormControl>
-                                            <div className="relative">
-                                                <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                        <div className="relative">
+                                            <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                            <FormControl>
                                                 <Input
                                                     placeholder="First Name (Optional)"
                                                     type="text"
@@ -92,8 +94,8 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                                     className="pl-10"
                                                     {...field}
                                                 />
-                                            </div>
-                                        </FormControl>
+                                            </FormControl>
+                                        </div>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -105,9 +107,9 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">Email</FormLabel>
-                                    <FormControl>
-                                        <div className="relative">
-                                            <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                        <FormControl>
                                             <Input
                                                 placeholder="name@example.com"
                                                 type="email"
@@ -118,8 +120,8 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                                 className="pl-10"
                                                 {...field}
                                             />
-                                        </div>
-                                    </FormControl>
+                                        </FormControl>
+                                    </div>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -130,9 +132,9 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">Password</FormLabel>
-                                    <FormControl>
-                                        <div className="relative">
-                                            <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                        <FormControl>
                                             <Input
                                                 placeholder="Password"
                                                 type="password"
@@ -143,8 +145,8 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                                 className="pl-10"
                                                 {...field}
                                             />
-                                        </div>
-                                    </FormControl>
+                                        </FormControl>
+                                    </div>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -156,9 +158,9 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="sr-only">Confirm Password</FormLabel>
-                                        <FormControl>
-                                            <div className="relative">
-                                                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                        <div className="relative">
+                                            <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                            <FormControl>
                                                 <Input
                                                     placeholder="Confirm Password"
                                                     type="password"
@@ -169,8 +171,8 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                                                     className="pl-10"
                                                     {...field}
                                                 />
-                                            </div>
-                                        </FormControl>
+                                            </FormControl>
+                                        </div>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -195,8 +197,27 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                     </span>
                 </div>
             </div>
-            <Button variant="outline" type="button" disabled={isLoading} onClick={() => alert("Google Auth not implemented yet")}>
-                {isLoading ? (
+            <Button variant="outline" type="button" disabled={isLoading || isGoogleLoading} onClick={async () => {
+                setIsGoogleLoading(true)
+                setErrorMsg(null)
+                try {
+                    const supabase = createClient()
+                    const { error } = await supabase.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: `${window.location.origin}/auth/callback`,
+                        },
+                    })
+                    if (error) {
+                        setErrorMsg(error.message)
+                        setIsGoogleLoading(false)
+                    }
+                } catch {
+                    setErrorMsg("Failed to initiate Google sign-in.")
+                    setIsGoogleLoading(false)
+                }
+            }}>
+                {isGoogleLoading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                     <svg role="img" viewBox="0 0 24 24" className="mr-2 h-4 w-4">
@@ -206,7 +227,7 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
                         />
                     </svg>
                 )}
-                Google
+                Continue with Google
             </Button>
         </div>
     )
