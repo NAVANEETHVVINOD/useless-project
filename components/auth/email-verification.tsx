@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { MailCheck, AlertCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export function EmailVerification() {
   const searchParams = useSearchParams();
@@ -14,28 +15,35 @@ export function EmailVerification() {
   const [error, setError] = useState<string | null>(null);
 
   const handleResend = async () => {
+    if (!email) {
+      setError('No email address provided.');
+      return;
+    }
+
     setIsSending(true);
     setError(null);
     setIsSent(false);
 
-    // This is a placeholder for the actual API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    // Replace with your actual API call
-    // const res = await fetch('/api/auth/resend-verification', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email }),
-    // });
+    try {
+      const supabase = createClient();
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/verify`,
+        },
+      });
 
-    // if (res.ok) {
-    //   setIsSent(true);
-    // } else {
-    //   setError('Failed to resend verification email. Please try again.');
-    // }
-    
-    setIsSent(true); // Placeholder
-    setIsSending(false);
+      if (resendError) {
+        setError(resendError.message);
+      } else {
+        setIsSent(true);
+      }
+    } catch {
+      setError('Failed to resend verification email. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (

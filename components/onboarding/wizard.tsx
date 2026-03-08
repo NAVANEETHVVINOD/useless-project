@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PetProfileSchema, PetProfileFormData, SPECIES, SIZES, GENDERS } from "@/lib/validations/pet"
@@ -11,53 +11,49 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form"
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
-import { createPetProfile } from "@/app/actions/pet"
+import { useOnboardingStore } from "@/hooks/use-onboarding-store"
 import { ImageUploader } from "@/components/onboarding/image-uploader"
 
 export function PetOnboardingWizard() {
-  const [step, setStep] = useState(1)
+  const { step, formData, nextStep, prevStep, setFormData, submitProfile, restoreDraft } = useOnboardingStore();
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const form = useForm<PetProfileFormData>({
-    // We optionally bypass deep zod validation on incomplete steps by validating just the current fields before next()
     resolver: zodResolver(PetProfileSchema),
     mode: "onChange",
-    defaultValues: {
-      name: "",
-      species: undefined,
-      breed: "",
-      gender: undefined,
-      size: undefined,
-      photos: [],
-      personality: [],
-      bio: "",
-      preferences: {
-        maxDistance: 25,
-        speciesFilter: [],
-        ageRange: { min: 0, max: 20 }
-      }
-    } as any
+    defaultValues: formData
   })
 
-  const nextStep = async () => {
+  useEffect(() => {
+    restoreDraft();
+  }, [restoreDraft]);
+
+  useEffect(() => {
+    form.reset(formData);
+  }, [formData, form]);
+
+  const handleNext = async () => {
     let isValid = false;
     if (step === 1) {
       isValid = await form.trigger(["name", "species", "breed", "gender", "size"]);
     } else if (step === 2) {
-      // skipping photo validation for mockup purposes until connected to Supabase
-      isValid = true; 
+      isValid = await form.trigger(["photos"]);
     } else if (step === 3) {
       isValid = await form.trigger(["bio", "personality"]);
+    } else if (step === 4) {
+      isValid = await form.trigger(["preferences"]);
     }
 
     if (isValid) {
-      setStep((s) => Math.min(s + 1, 4))
+      setFormData(form.getValues());
+      nextStep();
     }
   }
 
-  const prevStep = () => {
-    setStep((s) => Math.max(s - 1, 1))
+  const handleBack = () => {
+    setFormData(form.getValues());
+    prevStep();
   }
 
   async function onSubmit(data: PetProfileFormData) {
@@ -65,16 +61,9 @@ export function PetOnboardingWizard() {
     setIsSubmitting(true)
     setErrorMsg(null)
 
-    // Make sure date is provided or stubbed for MVP
-    if (!data.birthday) {
-        data.birthday = new Date("2020-01-01"); // Mock birthday for now
-    }
-
     try {
-      const res = await createPetProfile(data)
-      if (res && res.error) {
-        setErrorMsg(res.error)
-      }
+      setFormData(data);
+      await submitProfile();
     } catch (e) {
       setErrorMsg("Failed to create profile. Please try again.")
     } finally {
@@ -213,12 +202,12 @@ export function PetOnboardingWizard() {
             </div>
 
             <div className="flex justify-between pt-6 border-t">
-                <Button variant="ghost" type="button" onClick={prevStep} disabled={step === 1 || isSubmitting}>
+                <Button variant="ghost" type="button" onClick={handleBack} disabled={step === 1 || isSubmitting}>
                     Back
                 </Button>
                 
                 {step < 4 ? (
-                     <Button type="button" onClick={nextStep}>Next Step</Button>
+                     <Button type="button" onClick={handleNext}>Next Step</Button>
                 ) : (
                     <Button type="submit" disabled={isSubmitting}>
                         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

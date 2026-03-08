@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { DraftService } from '@/lib/draft/service';
+import { createPetProfile } from '@/app/actions/pet';
 import { devtools, persist } from 'zustand/middleware';
 
 const draftService = new DraftService();
@@ -15,12 +16,29 @@ interface OnboardingState {
   submitProfile: () => Promise<void>;
 }
 
+const initialState = {
+    name: "",
+    species: undefined,
+    breed: "",
+    gender: undefined,
+    size: undefined,
+    birthday: undefined,
+    photos: [],
+    personality: [],
+    bio: "",
+    preferences: {
+        maxDistance: 25,
+        speciesFilter: [],
+        ageRange: { min: 0, max: 20 }
+    }
+};
+
 export const useOnboardingStore = create<OnboardingState>()(
   devtools(
     persist(
       (set, get) => ({
         step: 1,
-        formData: {},
+        formData: initialState,
         setStep: (step) => set({ step }),
         setFormData: (data) => {
           const newFormData = { ...get().formData, ...data };
@@ -37,9 +55,12 @@ export const useOnboardingStore = create<OnboardingState>()(
         },
         submitProfile: async () => {
           const formData = get().formData;
-          // TODO: Call the API to submit the profile
-          console.log('Submitting profile', formData);
+          const res = await createPetProfile(formData);
+          if (res && res.error) {
+            throw new Error(res.error);
+          }
           draftService.deleteDraft();
+          set({ step: 1, formData: initialState });
         },
       }),
       {

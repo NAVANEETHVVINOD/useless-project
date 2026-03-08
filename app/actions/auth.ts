@@ -71,5 +71,5 @@ export async function signup(data: z.infer<typeof AuthSchema>) {
     }
   }
 
-  redirect("/auth/verify");
+  redirect(`/auth/verify?email=${email}`);
 }

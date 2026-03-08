@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Loader2, UploadCloud, X, ImageIcon } from "lucide-react"
-import Image from "next/image"
+import { Loader2, UploadCloud, X } from "lucide-react"
 
 interface ImageUploaderProps {
   value: string[]
