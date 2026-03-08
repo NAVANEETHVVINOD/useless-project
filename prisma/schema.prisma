@@ -29,10 +29,10 @@ model User {
   premiumTier   String?   // "plus" | "platinum"
   premiumExpiry DateTime?
   
-  // Relations
   pets          Pet[]
   swipes        Swipe[]
-  matches       Match[]   @relation("UserMatches")
+  matches1      Match[]   @relation("MatchUser1")
+  matches2      Match[]   @relation("MatchUser2")
   messages      Message[]
   reports       Report[]  @relation("Reporter")
   blockedUsers  Block[]   @relation("Blocker")
@@ -78,7 +78,8 @@ model Pet {
   
   // Relations
   swipes        Swipe[]
-  matches       Match[]   @relation("PetMatches")
+  matches1      Match[]   @relation("MatchPet1")
+  matches2      Match[]   @relation("MatchPet2")
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -113,11 +114,13 @@ model Swipe {
 model Match {
   id          String    @id @default(cuid())
   pet1Id      String
-  pet1        Pet       @relation("PetMatches", fields: [pet1Id], references: [id], onDelete: Cascade)
+  pet1        Pet       @relation("MatchPet1", fields: [pet1Id], references: [id], onDelete: Cascade)
   pet2Id      String
+  pet2        Pet       @relation("MatchPet2", fields: [pet2Id], references: [id], onDelete: Cascade)
   user1Id     String
-  user1       User      @relation("UserMatches", fields: [user1Id], references: [id], onDelete: Cascade)
+  user1       User      @relation("MatchUser1", fields: [user1Id], references: [id], onDelete: Cascade)
   user2Id     String
+  user2       User      @relation("MatchUser2", fields: [user2Id], references: [id], onDelete: Cascade)
   
   // Match metadata
   matchedAt   DateTime  @default(now())
