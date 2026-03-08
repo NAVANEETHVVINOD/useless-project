@@ -5,15 +5,19 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Pet } from "@prisma/client"
 import { recordSwipe } from "@/app/actions/swipe"
 import { Check, X, Star, MapPin } from "lucide-react"
+import { MatchModal } from "@/components/matches/match-modal"
 
 interface SwipeEngineProps {
   initialPets: Pet[]
-  userPetId: string
+  userPet: Pet
 }
 
-export function SwipeEngine({ initialPets, userPetId }: SwipeEngineProps) {
+export function SwipeEngine({ initialPets, userPet }: SwipeEngineProps) {
   const [pets, setPets] = useState<Pet[]>(initialPets)
   const [direction, setDirection] = useState<number | null>(null) // 1 = right, -1 = left, 0 = super
+  
+  // State for the Match Modal
+  const [matchedPet, setMatchedPet] = useState<Pet | null>(null)
   
   const handleDragEnd = async (event: any, info: any) => {
     const offset = info.offset.x
@@ -40,12 +44,11 @@ export function SwipeEngine({ initialPets, userPetId }: SwipeEngineProps) {
       setTimeout(() => setDirection(null), 300)
 
       try {
-        const response = await recordSwipe(userPetId, currentPet.id, swipeDirection)
+        const response = await recordSwipe(userPet.id, currentPet.id, swipeDirection)
         if (response?.isMatch) {
-          // Trigger match UI (confetti, toast, etc.)
+          // Trigger match UI
           console.log("It's a Match!")
-          // TODO: Add proper visual match celebration
-          alert("It's a Match with " + currentPet.name + "!")
+          setMatchedPet(currentPet)
         }
       } catch (error) {
         console.error("Failed to swipe:", error)
@@ -55,6 +58,15 @@ export function SwipeEngine({ initialPets, userPetId }: SwipeEngineProps) {
 
   return (
     <div className="relative w-full h-[600px] flex items-center justify-center">
+      
+      {/* Match Modal Overlay */}
+      <MatchModal 
+        isOpen={!!matchedPet} 
+        onClose={() => setMatchedPet(null)}
+        currentUserPet={userPet}
+        matchedPet={matchedPet!}
+      />
+
       <AnimatePresence>
         {pets.slice(0, 3).reverse().map((pet, index) => {
           // Reversed because we want the first item to render last (on top)

@@ -73,3 +73,9 @@ export async function signup(data: z.infer<typeof AuthSchema>) {
 
   redirect(`/auth/verify?email=${email}`);
 }
+
+export async function logout() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/login");
+}

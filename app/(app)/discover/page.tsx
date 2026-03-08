@@ -47,7 +47,7 @@ export default async function DiscoverPage() {
       <div className="flex-1 max-w-md w-full mx-auto p-4 flex flex-col justify-center relative">
         <h1 className="text-2xl font-bold mb-6 text-center text-primary-dark">Discover New Friends</h1>
         {potentialPets.length > 0 ? (
-          <SwipeEngine initialPets={potentialPets} userPetId={userPet.id} />
+          <SwipeEngine initialPets={potentialPets} userPet={userPet} />
         ) : (
           <div className="flex flex-col items-center justify-center p-8 text-center h-96 bg-card rounded-xl shadow-sm border border-border/50">
             <div className="text-4xl mb-4">🐾</div>
