@@ -4,12 +4,14 @@ import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Loader2, Mail, Lock, User as UserIcon } from "lucide-react"
+import { Loader2, Mail, Lock, User as UserIcon, AlertCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { login, signup } from "@/app/actions/auth"
 import {
     Form,
     FormControl,
@@ -35,6 +37,7 @@ type FormData = z.infer<typeof userAuthSchema>
 
 export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [errorMsg, setErrorMsg] = React.useState<string | null>(null)
 
     const form = useForm<FormData>({
         resolver: zodResolver(userAuthSchema),
@@ -47,16 +50,31 @@ export function AuthForm({ className, type, ...props }: UserAuthFormProps) {
 
     async function onSubmit(data: FormData) {
         setIsLoading(true)
+        setErrorMsg(null)
 
-        // TODO: Implement Supabase Auth
-        setTimeout(() => {
-            console.log(data)
+        try {
+            const res = type === "login" 
+                ? await login(data) 
+                : await signup(data)
+
+            if (res && res.error) {
+                setErrorMsg(res.error)
+            }
+        } catch (error) {
+            setErrorMsg("An unexpected error occurred. Please try again.")
+        } finally {
             setIsLoading(false)
-        }, 2000)
+        }
     }
 
     return (
         <div className={cn("grid gap-6", className)} {...props}>
+            {errorMsg && (
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{errorMsg}</AlertDescription>
+                </Alert>
+            )}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="grid gap-4">
